@@ -125,7 +125,7 @@ This helps filter only crops that fall **within the desired radius** and are **f
 
 Test all endpoints using the included file:
 
-📄 `BeeTrail.postman_collection.json`
+📄 `Bee-backend.postman_collection.json`
 
 Covers:
 - Auth (Register/Login)
