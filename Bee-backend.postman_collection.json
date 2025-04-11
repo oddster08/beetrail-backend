@@ -1,0 +1,284 @@
+{
+	"info": {
+		"_postman_id": "423f55f8-e59f-4bc7-ab49-7e871fabf955",
+		"name": "Bee-backend",
+		"description": "### 🐝 BeeTrail API – Postman Collection Overview\n\nThis Postman collection is designed to help developers and testers interact with the **BeeTrail Field Logger** backend API. It includes all core and bonus endpoints such as authentication, hive log management, crop calendar entries, nearby crop search, and CSV export.\n\n---\n\n### 🔑 Authentication\n\n- `POST /api/auth/register`\n    \n    Register a new user with role `\"beekeeper\"` or `\"admin\"`\n    \n- makefileCopyEditAuthorization: Bearer\n    \n\n---\n\n### 🐝 Hive Endpoints\n\n- `POST /api/hives`\n    \n    Add a hive log with unique `hiveId`, lat/lng, date, and number of colonies\n    \n- `GET /api/hives`\n    \n    Get all hive logs with optional filters:  \n    `startDate`, `endDate`, `page`, `limit`\n    \n- `GET /api/hives/export`\n    \n    Download hive logs as a `.csv` file\n    \n\n---\n\n### 🌻 Crop Endpoints\n\n- `POST /api/crops`\n    \n    Add a new crop calendar entry with flowering start and end dates\n    \n- `GET /api/crops/nearby`\n    \n    Find nearby flowering crops with optional:  \n    `latitude`, `longitude`, `radius`, `date`\n    \n\n---\n\n### 📌 Notes\n\n- All routes except registration and login require a valid **JWT token**\n    \n- Default radius for nearby crops = `100km` if not provided\n    \n- Dates should be in ISO format (`YYYY-MM-DD`)\n    \n- Admin routes are optional and not included in this collection\n    \n\n---\n\n### 🧪 How to Use\n\n1. Register and login to get a token\n    \n2. Set the token in the **Authorization tab** (Bearer)\n    \n3. Test each API endpoint by clicking \"Send\"\n    \n4. Customize request bodies and params as needed",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "29483629"
+	},
+	"item": [
+		{
+			"name": "getHivelogs",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5000/api/hives",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"hives"
+					]
+				},
+				"description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+			},
+			"response": []
+		},
+		{
+			"name": "addHivelogs",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"hiveId\": \"HIVE006\",\n  \"datePlaced\": \"2025-04-08\",\n  \"latitude\": 98.7041,\n  \"longitude\": 77.1025,\n  \"numColonies\": 5\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/hives",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"hives"
+					]
+				},
+				"description": "This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.\n\nA successful POST request typically returns a `200 OK` or `201 Created` response code."
+			},
+			"response": []
+		},
+		{
+			"name": "addCropEntry",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Successful PUT request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 201, 204]);",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"name\": \"Sunflower\",\n  \"floweringStart\": \"2025-04-10\",\n  \"floweringEnd\": \"2025-04-25\",\n  \"latitude\": 26.9124,\n  \"longitude\": 75.7873,\n  \"recommendedHiveDensity\": 5\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/crops",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"crops"
+					]
+				},
+				"description": "This is a PUT request and it is used to overwrite an existing piece of data. For instance, after you create an entity with a POST request, you may want to modify that later. You can do that using a PUT request. You typically identify the entity being updated by including an identifier in the URL (eg. `id=1`).\n\nA successful PUT request typically returns a `200 OK`, `201 Created`, or `204 No Content` response code."
+			},
+			"response": []
+		},
+		{
+			"name": "getnearbycrops",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5000/api/crops/nearby?latitude=28.7041&longitude=77.1025",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"crops",
+						"nearby"
+					],
+					"query": [
+						{
+							"key": "latitude",
+							"value": "28.7041"
+						},
+						{
+							"key": "longitude",
+							"value": "77.1025"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "register",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"username\": \"adminUser\",\r\n  \"password\": \"admin123\",\r\n  \"role\": \"admin\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/auth/register",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"auth",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "login",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZjhhOTNjZDI5MjhhY2MwYmZhYzMyMCIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc0NDM0OTUwMCwiZXhwIjoxNzQ0OTU0MzAwfQ.b09a_jvQKwu-WFZPg_zVCDQTgqNfVvQvPB2qXC7aiz4",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"adminUser\",\r\n    \"password\": \"admin123\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/auth/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "exporthivelogs",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5000/api/hives/export",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"hives",
+						"export"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "id",
+			"value": "1"
+		},
+		{
+			"key": "base_url",
+			"value": "https://postman-rest-api-learner.glitch.me/"
+		}
+	]
+}
